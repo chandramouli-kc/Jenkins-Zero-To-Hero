@@ -1,30 +1,28 @@
 pipeline {
-  agent {
-    docker {
-      image 'abhishekf5/maven-abhishek-docker-agent:v1'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
-    }
-  }
-  stages {
-    stage('Checkout') {
-      steps {
-        sh 'echo passed'
-        //git branch: 'main', url: 'https://github.com/iam-veeramalla/Jenkins-Zero-To-Hero.git'
-      }
-    }
-   
-    
-    stage('Build and Push Docker Image') {
-      environment {
-        DOCKER_IMAGE = "abhishekf5/ultimate-cicd:${BUILD_NUMBER}"
-        // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
-        REGISTRY_CREDENTIALS = credentials('docker-cred')
-        echo "Docker Image: ${DOCKER_IMAGE}"
-        echo "Using credentials: docker-cred"
-      }
-      
-      }
-    }
-    
-  }
+    agent any
 
+    environment {
+        DOCKER_IMAGE = 'kcmouli3s/ultimate-cicd:tag'
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-cred') {
+                        def dockerImage = docker.image("${DOCKER_IMAGE}")
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+    }
+}
