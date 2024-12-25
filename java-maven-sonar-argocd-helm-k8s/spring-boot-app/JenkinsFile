@@ -42,7 +42,7 @@ pipeline {
             GIT_USER_NAME = "chandramouli-kc"
         }
         steps {
-INS            withCredentials([string(credentialsId: 'github', variable: 'JENKINS-TOKEN')]) {
+INS            withCredentials([string(credentialsId: 'github', variable: 'GITHUB-TOKEN')]) {
                 sh '''
                     git config user.email "kcmouli3s@gmail.com"
                     git config user.name "chandramouli-kc"
@@ -50,7 +50,7 @@ INS            withCredentials([string(credentialsId: 'github', variable: 'JENKI
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                     git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${JENKINS-TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:devinit
+                    git push https://${GITHUB-TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:devinit
                 '''
             }
         }
