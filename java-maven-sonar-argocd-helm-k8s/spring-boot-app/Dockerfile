@@ -1,14 +1,15 @@
+# You can change this base image to anything else
+# But make sure to use the correct version of Java
+FROM adoptopenjdk/openjdk11:alpine-jre
 
-FROM alpine:latest
+# Simply the artifact path
+ARG artifact=target/spring-boot-web.jar
 
-# Set the working directory inside the container
-WORKDIR /app
+WORKDIR /opt/app
+#CMD pwd
 
-# Copy files from the host to the container (optional, if needed)
-# COPY . /app
+#COPY ${artifact} app.jar
 
-# Install essential tools or packages (optional, if needed)
-RUN apk add --no-cache bash
-
-# Default command to run when the container starts
-CMD ["echo", "Hello from Alpine!"]
+# This should not be changed
+ENTRYPOINT ["java","-jar","app.jar"]
+# Use the official Alpine Linux base image
