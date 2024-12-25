@@ -45,8 +45,8 @@ pipeline {
     echo "Docker Image: ${DOCKER_IMAGE}"
     echo "Using credentials: docker-cred"
 //}
-            }
-        }
+         //   }
+        //}
       }
     }
     stage('Update Deployment File') {
